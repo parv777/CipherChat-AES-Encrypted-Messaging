@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CipherChat — Encrypted Message Workspace</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="CipherChat home">
+      <span class="brand-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5zM12 14v3"/></svg></span>
+      <span><b>CipherChat</b><small>ENCRYPTED MESSAGE WORKSPACE</small></span>
+    </a>
+    <div class="header-meta"><span class="online-dot"></span><span>LOCAL SESSION</span><i></i><span class="algo">AES-256-GCM</span></div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow"><span class="eyebrow-mark">✳</span> CRYPTOGRAPHY LAB</div>
+    <h1>Private messages,<br><span>made simple.</span></h1>
+    <p>Encrypt a message with a shared passphrase, then decrypt it in the recipient workspace.</p>
+  </section>
+
+  <div class="notice">
+    <span class="notice-icon">i</span>
+    <div><strong>Local demonstration</strong><p>This app runs on your computer. Do not use real sensitive messages or expose the development server to the internet.</p></div>
+    <span class="local-tag">SAME DEVICE</span>
+  </div>
+
+  <main class="workspaces">
+    <section class="workspace sender">
+      <div class="workspace-header">
+        <div class="avatar avatar-a">A</div>
+        <div class="workspace-title"><span class="section-kicker">SENDER WORKSPACE</span><h2>User A <span>/ Encrypt</span></h2><p>Compose your original message.</p></div>
+        <span class="number">01</span>
+      </div>
+
+      <label for="plain">MESSAGE CONTENT</label>
+      <div class="textarea-shell">
+        <textarea id="plain" rows="5" maxlength="12000" placeholder="Write your message here…"></textarea>
+        <div class="textarea-footer"><span>PLAIN TEXT</span><span id="plainCount">0 characters</span></div>
+      </div>
+
+      <label for="keyA">SHARED PASSPHRASE <span class="label-aside">MIN. 8 CHARACTERS</span></label>
+      <div class="password-field">
+        <span class="input-symbol">⌑</span><input id="keyA" type="password" autocomplete="new-password" placeholder="Enter your passphrase">
+        <button type="button" class="reveal" data-target="keyA">Show</button>
+      </div>
+      <p class="helper">User B must enter the exact same passphrase.</p>
+
+      <button class="main-button" id="encryptBtn"><span>Encrypt message</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></button>
+      <div class="status" id="encryptStatus" role="status" aria-live="polite"></div>
+
+      <div class="output-heading"><label for="cipher">ENCRYPTED OUTPUT</label><span class="output-badge">▣ CIPHERTEXT</span></div>
+      <div class="textarea-shell output-shell">
+        <textarea id="cipher" rows="4" readonly spellcheck="false" placeholder="Encrypted output will appear here…"></textarea>
+        <div class="textarea-footer"><span>BASE64 PACKAGE</span><span>READ ONLY</span></div>
+      </div>
+      <div class="button-row">
+        <button class="sub-button" id="copyBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>Copy output</button>
+        <button class="sub-button" id="sendToBBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M5 13l7 7 7-7"/></svg>Transfer to B</button>
+      </div>
+    </section>
+
+    <div class="connector" aria-hidden="true">
+      <div class="connector-icon"><svg viewBox="0 0 24 24"><path d="M8 8h8a4 4 0 0 1 0 8h-1M16 16H8a4 4 0 0 1 0-8h1M9 12h6"/></svg></div>
+      <span>SECURE<br>WORKFLOW</span>
+      <div class="connector-line"></div>
+      <span class="connector-lock">⌑</span>
+    </div>
+
+    <section class="workspace recipient">
+      <div class="workspace-header">
+        <div class="avatar avatar-b">B</div>
+        <div class="workspace-title"><span class="section-kicker">RECIPIENT WORKSPACE</span><h2>User B <span>/ Decrypt</span></h2><p>Recover the original message.</p></div>
+        <span class="number">02</span>
+      </div>
+
+      <label for="cipherInput">MESSAGE FROM USER A</label>
+      <div class="textarea-shell">
+        <textarea id="cipherInput" rows="5" spellcheck="false" placeholder="Paste the encrypted output here…"></textarea>
+        <div class="textarea-footer"><span>ENCRYPTED INPUT</span><span id="cipherCount">0 characters</span></div>
+      </div>
+
+      <label for="keyB">SHARED PASSPHRASE</label>
+      <div class="password-field">
+        <span class="input-symbol">⌑</span><input id="keyB" type="password" autocomplete="new-password" placeholder="Enter the same passphrase">
+        <button type="button" class="reveal" data-target="keyB">Show</button>
+      </div>
+      <p class="helper">A wrong passphrase or changed ciphertext will fail verification.</p>
+
+      <button class="main-button decrypt-button" id="decryptBtn"><span>Decrypt message</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></button>
+      <div class="status" id="decryptStatus" role="status" aria-live="polite"></div>
+
+      <div class="output-heading"><label for="plainOutput">ORIGINAL MESSAGE</label><span class="output-badge verified">✓ AUTHENTICATED</span></div>
+      <div class="textarea-shell original-shell">
+        <textarea id="plainOutput" rows="4" readonly placeholder="Decrypted message will appear here…"></textarea>
+        <div class="textarea-footer"><span>PLAIN TEXT</span><span>READ ONLY</span></div>
+      </div>
+      <div class="button-row">
+        <button class="sub-button" id="copyPlainBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>Copy message</button>
+        <button class="sub-button" id="clearBBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg>Clear panel</button>
+      </div>
+    </section>
+  </main>
+
+  <section class="how-it-works">
+    <div class="how-title"><span>BEHIND THE ENCRYPTION</span><p>Three steps protect the message.</p></div>
+    <div class="steps">
+      <div class="step-card"><span class="step-number">01</span><div><strong>Random salt & nonce</strong><small>Fresh random values for each message.</small></div></div>
+      <div class="step-card"><span class="step-number">02</span><div><strong>Key derivation</strong><small>Scrypt derives a 256-bit AES key.</small></div></div>
+      <div class="step-card"><span class="step-number">03</span><div><strong>Integrity verification</strong><small>AES-GCM detects changes to ciphertext.</small></div></div>
+    </div>
+  </section>
+
+  <footer><span class="footer-brand">CipherChat</span><span>Python · Flask · AES-256-GCM · Scrypt</span><span>EDUCATIONAL DEMO · NOT PRODUCTION E2E</span></footer>
+</div>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
